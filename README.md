@@ -9,7 +9,7 @@ Publishes [Cypress](https://www.cypress.io/) runs on TestRail.
 ## Install
 
 ```shell
-$ npm install ypress-testrail-accumulative-reporter --save-dev
+$ npm install cypress-testrail-accumulative-reporter --save-dev
 ```
 
 ## Usage
