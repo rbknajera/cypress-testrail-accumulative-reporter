@@ -1,6 +1,6 @@
 "use strict";
 var globalRunId = null;
-Object.defineProperty(exports, "__esModule", {value: true});
+Object.defineProperty(exports, "__esModule", { value: true });
 var axios = require('axios');
 var chalk = require('chalk');
 var TestRail = /** @class */ (function () {
@@ -9,13 +9,33 @@ var TestRail = /** @class */ (function () {
         this.base = "https://" + options.domain + "/index.php?/api/v2";
     }
 
+    TestRail.prototype.getRunId = function () {
+        if (globalRunId == null) {
+            var _this = this;
+            axios({
+                method: 'get',
+                url: this.base + "/get_runs/" + this.options.projectId,
+                headers: { 'Content-Type': 'application/json' },
+                auth: {
+                    username: this.options.username,
+                    password: this.options.password,
+                },
+            }).then(function (response) {
+                _this.runId = response.data[0].id;
+                globalRunId = response.data[0].id;
+            }).catch(function (error) {
+                return console.error(error);
+            });
+        }
+    };
+
     TestRail.prototype.createRun = function (name, description) {
         if (globalRunId == null) {
             var _this = this;
             axios({
                 method: 'post',
                 url: this.base + "/add_run/" + this.options.projectId,
-                headers: {'Content-Type': 'application/json'},
+                headers: { 'Content-Type': 'application/json' },
                 auth: {
                     username: this.options.username,
                     password: this.options.password,
@@ -40,7 +60,7 @@ var TestRail = /** @class */ (function () {
         axios({
             method: 'post',
             url: this.base + "/delete_run/" + globalRunId,
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             auth: {
                 username: this.options.username,
                 password: this.options.password,
@@ -54,12 +74,12 @@ var TestRail = /** @class */ (function () {
         axios({
             method: 'post',
             url: this.base + "/add_results_for_cases/" + globalRunId,
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             auth: {
                 username: this.options.username,
                 password: this.options.password,
             },
-            data: JSON.stringify({results: results}),
+            data: JSON.stringify({ results: results }),
         })
             .then(function (response) {
                 console.log('\n', chalk.magenta.underline.bold('(TestRail Reporter)'));
