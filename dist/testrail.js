@@ -21,8 +21,10 @@ var TestRail = /** @class */ (function () {
                     password: this.options.password,
                 },
             }).then(function (response) {
-                _this.runId = response.data[0].id;
-                globalRunId = response.data[0].id;
+                if(response.data[0].passed_count === 0) {
+                    _this.runId = response.data[0].id;
+                    globalRunId = response.data[0].id;
+                }
             }).catch(function (error) {
                 return console.error(error);
             });
